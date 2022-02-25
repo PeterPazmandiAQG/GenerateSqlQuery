@@ -37,7 +37,7 @@ namespace WPF.ViewModel
 
             if (dlg.ShowDialog() == true)
             {
-                this.ExcelHandler.ConvertExcelToDataTable(dlg.FileName);
+                this.ExcelHandler.ReadFile(dlg.FileName);
             }
         }
     }
