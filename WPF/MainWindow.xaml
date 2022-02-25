@@ -1,0 +1,83 @@
+﻿<Window x:Class="WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF"
+        xmlns:viewmodels="clr-namespace:WPF.ViewModel"
+        xmlns:views="clr-namespace:WPF.View"
+		xmlns:menuButton="clr-namespace:WPF.CustomControl.MenuButton"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="768" Width="1024" 
+		WindowStartupLocation="CenterScreen" WindowState="Maximized" 
+		MinWidth="1024" MinHeight="768">
+    
+    <Grid Background="White">
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type viewmodels:InsertSqlViewModel}">
+                <views:InsertSqlView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:UpdateSqlViewModel}">
+                <views:UpdateSqlView />
+            </DataTemplate>
+        </Grid.Resources>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="105" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="649*" />
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="1" Background="DarkBlue">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="65" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <menuButton:MenuButton
+                    Grid.Row="1" Grid.Column="1"
+                    x:Name="btnInsert" ToolTip="Insert"
+                    ImageSource="/WPF;component/Resources/add_32.png" LabelContent="Insert" 
+                    Command="{Binding MenuItemOpenCommand}" CommandParameter="InsertSqlViewModel" >
+            </menuButton:MenuButton>
+            <menuButton:MenuButton
+                    Grid.Row="1" Grid.Column="3"
+                    x:Name="btnUpdate" ToolTip="Update"
+                    ImageSource="/WPF;component/Resources/tools_48.png" LabelContent="Update" 
+                    Command="{Binding MenuItemOpenCommand}" CommandParameter="UpdateSqlViewModel" >
+            </menuButton:MenuButton>
+
+        </Grid>
+
+        <ContentControl
+                Grid.Row="3"
+                Content="{Binding CurrentViewModel, Mode=TwoWay}" />
+        
+    </Grid>
+</Window>
