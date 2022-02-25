@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Resources\add_32.png" />
+    <None Remove="Resources\magnifing_glass_32.png" />
     <None Remove="Resources\tools_48.png" />
   </ItemGroup>
 
@@ -21,6 +22,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\add_32.png" />
+    <Resource Include="Resources\magnifing_glass_32.png" />
     <Resource Include="Resources\tools_48.png">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </Resource>

@@ -4,11 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPF.View"
+		     xmlns:menuButton="clr-namespace:WPF.CustomControl.MenuButton"
              mc:Ignorable="d"
              Background="White" >
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="100" />
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -17,6 +18,20 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+              Background="LightGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <menuButton:MenuButton    
+                Background="White"
+                x:Name="btnInsert" ToolTip="Browse"
+                ImageSource="/WPF;component/Resources/magnifing_glass_32.png" LabelContent="Browse" 
+                Command="{Binding BrowseFileCommand}" CommandParameter="" >
+            </menuButton:MenuButton>
+        </Grid>
 
         <Label
             Grid.Row="1" Grid.Column="1"
