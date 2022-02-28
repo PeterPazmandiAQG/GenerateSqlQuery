@@ -4,5 +4,6 @@
     <BitmapImage x:Key="AddImage" UriSource="/Resources/add_32.png"></BitmapImage >
     <BitmapImage x:Key="EditImage" UriSource="/Resources/tools_48.png"></BitmapImage >
     <BitmapImage x:Key="MagnifingClassImage" UriSource="/Resources/magnifing_glass_32.png"></BitmapImage >
+    <BitmapImage x:Key="UploadImage" UriSource="/Resources/upload_64.png"></BitmapImage >
     
 </ResourceDictionary>

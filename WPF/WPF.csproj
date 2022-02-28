@@ -10,14 +10,12 @@
     <None Remove="Resources\add_32.png" />
     <None Remove="Resources\magnifing_glass_32.png" />
     <None Remove="Resources\tools_48.png" />
+    <None Remove="Resources\upload_64.png" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ExcelHandler\ExcelHandler.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Dictionary\" />
+    <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +24,17 @@
     <Resource Include="Resources\tools_48.png">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\upload_64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utils\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Dictionary\ConverterDictionary.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
   </ItemGroup>
 
 </Project>

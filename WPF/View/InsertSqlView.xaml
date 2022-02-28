@@ -10,16 +10,21 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100" />
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="100" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
-            <RowDefinition Height="30" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="66" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+        <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="4"
               Background="LightGray">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
@@ -33,9 +38,82 @@
             </menuButton:MenuButton>
         </Grid>
 
+        <!--Loading-->
         <Label
-            Grid.Row="1" Grid.Column="1"
-            Content="{Binding SomeText}" />
+            Grid.Row="1" Grid.Column="2"
+            FontSize="24" FontWeight="Bold"
+            Visibility="{Binding Loading, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+            Content="{Binding LoadingText}" />
+
+        <!--IsSuccessfull-->
+        <TextBox
+            Grid.Row="1" Grid.Column="2"
+            FontSize="24" FontWeight="Bold"
+            HorizontalContentAlignment="Center"
+            Visibility="{Binding IsSuccessfull, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+            Text="{Binding ExcelData.TableName}" />
+
+        <ListView Grid.Row="2" Grid.Column="2" Grid.RowSpan="2"
+                  Visibility="{Binding IsSuccessfull, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+                  ItemsSource="{Binding ExcelData.Columns}"
+                  IsSynchronizedWithCurrentItem="True" 
+                  SelectionMode="Single" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="150">
+                        <GridViewColumnHeader Content="Column Name" ToolTip="QAD column name"/>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate >
+                                <TextBox DockPanel.Dock="Left" Text="{Binding ColumnName}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="120">
+                        <GridViewColumnHeader Content="Column Type" ToolTip="QAD column type"/>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate >
+                                <ComboBox ItemsSource="{Binding DataTypes}" SelectedItem="{Binding ColumnType}">
+                                    <ComboBox.Style>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        </Style>
+                                    </ComboBox.Style>
+                                </ComboBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+
+        <menuButton:MenuButton
+            Grid.Row="2" Grid.Column="3"
+            VerticalAlignment="Top"
+            Visibility="{Binding IsSuccessfull, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+            x:Name="btnGeneratequeries" ToolTip="Generate QAD Insert Queries"
+            ImageSource="/WPF;component/Resources/upload_64.png" LabelContent="Generate"
+            Command="{Binding GenerateSqlCommand}" CommandParameter="" >
+        </menuButton:MenuButton>
+
+        <Label
+            Grid.Row="3" Grid.Column="3"
+            HorizontalContentAlignment="Center"
+            Visibility="{Binding IsGenerating, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+            Content="{Binding StatusText}" />
+
+        <TextBox
+            Grid.Row="2" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="1"
+            TextWrapping="Wrap"
+            AcceptsReturn="True"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto"
+            Text="{Binding SqlQueries}"
+            Visibility="{Binding IsGenerated, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
 
     </Grid>
 </UserControl>
