@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WPF.Commands;
 using WPF.Utils;
 
@@ -68,20 +69,39 @@ namespace WPF.ViewModel
 
         public async override void BrowseFile(object param)
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".xls|.xlsx";
-            dlg.Filter = "Excel documents (*.xls, *.xlsx)|*.xls;*.xlsx";
-
-            if (dlg.ShowDialog() == true)
+            try
             {
-                StartLoadingProcess();
+                var dlg = new Microsoft.Win32.OpenFileDialog();
+                dlg.DefaultExt = ".xls|.xlsx";
+                dlg.Filter = "Excel documents (*.xls, *.xlsx)|*.xls;*.xlsx";
 
-                ExcelData = await ExcelHandler.ConvertExcelToDataTable(dlg.FileName);
+                if (dlg.ShowDialog() == true)
+                {
+                    StartLoadingProcess();
 
-                // Update SqlGenerated bool
-                OnPropertyChanged(nameof(SqlGenerated));
+                    ExcelData = await ExcelHandler.ConvertExcelToDataTable(dlg.FileName);
 
-                SetSuccessRequest();
+                    // Update SqlGenerated bool
+                    OnPropertyChanged(nameof(SqlGenerated));
+
+                    SetSuccessRequest();
+                }
+            }
+            catch(System.IO.IOException ex)
+            {
+                if (ex.Message.Contains("it is being used by another process"))
+                {
+                    System.Windows.MessageBox.Show("The excel file it is being used by another process", "Error", MessageBoxButton.OKCancel, MessageBoxImage.Error);
+                    SetUnSuccessRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("it is being used by another process"))
+                {
+                    System.Windows.MessageBox.Show(ex.Message, "Error", MessageBoxButton.OKCancel, MessageBoxImage.Error);
+                    SetUnSuccessRequest();
+                }
             }
         }
 
@@ -115,7 +135,7 @@ namespace WPF.ViewModel
                     {
                         if (string.IsNullOrEmpty(row.ItemArray[i].ToString()))
                         {
-                            SqlQueries += "''";
+                            SqlQueries += "NULL";
                         }
                         else
                         {
