@@ -27,7 +27,6 @@ namespace WPF.ViewModel
         public ExcelHandler.ExcelHandler ExcelHandler { get; set; }
 
         private string _sqlQueries;
-
         public string SqlQueries
         {
             get { return _sqlQueries; }
@@ -35,6 +34,16 @@ namespace WPF.ViewModel
             { 
                 _sqlQueries = value;
                 OnPropertyChanged(nameof(SqlQueries));
+            }
+        }
+        private string _insertIntoPart;
+        public string InsertIntoPart
+        {
+            get { return _insertIntoPart; }
+            set 
+            {
+                _insertIntoPart = value;
+                OnPropertyChanged(nameof(InsertIntoPart));
             }
         }
 
@@ -78,9 +87,20 @@ namespace WPF.ViewModel
 
         public async override void GenerateSql(object param)
         {
+            ClearQueryTexts();
+
             await Task.Run(() =>
             {
-                SqlQueries = "";
+                InsertIntoPart += $"INSERT INTO {ExcelData.TableName} (";
+                // Columns
+                for (int i = 0; i < ExcelData.Columns.Count; i++)
+                {
+                    InsertIntoPart += ExcelData.Columns[i].ColumnName;
+                    if (i != ExcelData.Columns.Count - 1)
+                    {
+                        InsertIntoPart += ", ";
+                    }
+                }
 
                 SetGenerationStarted();
 
@@ -89,34 +109,67 @@ namespace WPF.ViewModel
                 {
                     DataRow row = ExcelData.Rows[j];
 
-                    SqlQueries += $"INSERT INTO {ExcelData.TableName} (";
-                    // Columns
-                    for (int i = 0; i < ExcelData.Columns.Count; i++)
-                    {
-                        SqlQueries += ExcelData.Columns[i].ColumnName;
-                        if (i != ExcelData.Columns.Count - 1)
-                        {
-                            SqlQueries += ", ";
-                        }
-                    }
-
-                    SqlQueries += ") VALUES (";
+                    SqlQueries += InsertIntoPart + ") VALUES (";
                     //Rows
                     for (int i = 0; i < row.ItemArray.Length; i++)
                     {
-                        SqlQueries += row.ItemArray[i];
-                        if (i != ExcelData.Columns.Count - 1)
+                        if (string.IsNullOrEmpty(row.ItemArray[i].ToString()))
+                        {
+                            SqlQueries += "''";
+                        }
+                        else
+                        {
+                            DataTypes dataType = DataTypes.String;
+                            Enum.TryParse<DataTypes>(ExcelData.Columns[i].ColumnType, out dataType);
+                            switch (dataType)
+                            {
+                                case DataTypes.String:
+                                    {
+                                        SqlQueries += $"'{row.ItemArray[i].ToString()}'";
+                                        break;
+                                    }
+                                case DataTypes.Number:
+                                    {
+                                        SqlQueries += row.ItemArray[i].ToString();
+                                        break;
+                                    }
+                                case DataTypes.Date:
+                                    {
+                                        DateTime dateTime = DateTime.Now;
+                                        if (DateTime.TryParse(row.ItemArray[i].ToString(), out dateTime))
+                                        {
+                                            SqlQueries += $"'{dateTime.Year.ToString("0000")}-{dateTime.Month.ToString("00")}-{dateTime.Day.ToString("00")}'";
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                        }
+
+                        if (i == row.ItemArray.Length - 1)
+                        {
+                            SqlQueries += ")\nGO\n";
+                        }
+                        else
                         {
                             SqlQueries += ", ";
                         }
+                        //SqlQueries += row.ItemArray[i];
+
                     }
-                    SqlQueries += ")\n";
 
                     StatusText = (Convert.ToDouble(j) / Convert.ToDouble(ExcelData.Rows.Count)).ToString("#0.##%");
                 }
 
                 SetGenerationFinished();
             });
+        }
+
+        private void ClearQueryTexts()
+        {
+            InsertIntoPart = "";
+            SqlQueries = "";
         }
     }
 }
